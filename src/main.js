@@ -11,6 +11,7 @@ let generation = 0;
 let loading = false;
 let loadError = '';
 let initialized = false;
+const pendingStatuses = new Map();
 const escape = (value = '') => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const brand = '<a class="brand" href="/" aria-label="Task Tracker home"><span class="brand-icon" aria-hidden="true">✓</span> Task Tracker<span class="tag">ED1</span></a>';
 
@@ -134,9 +135,41 @@ function renderTasks() {
     document.querySelector('#first-task')?.addEventListener('click', () => taskDialog());
     return;
   }
-  list.innerHTML = visible.map(t => `<article class="task-row"><div class="task-symbol ${t.status}" aria-hidden="true">${t.status === 'done' ? '✓' : t.status === 'in_progress' ? '◒' : '○'}</div><div class="task-content"><h2>${escape(t.title)}</h2>${t.description ? `<p>${escape(t.description)}</p>` : ''}<span class="created">Added ${new Date(t.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span></div><span class="badge ${t.status}">${statuses[t.status]}</span><div class="task-actions"><button class="text-button" data-edit="${t.id}" aria-label="Edit ${escape(t.title)}">Edit</button><button class="text-button danger" data-delete="${t.id}" aria-label="Delete ${escape(t.title)}">Delete</button></div></article>`).join('');
+  list.innerHTML = visible.map(t => `<article class="task-row"><div class="task-symbol ${t.status}" aria-hidden="true">${t.status === 'done' ? '✓' : t.status === 'in_progress' ? '◒' : '○'}</div><div class="task-content"><h2>${escape(t.title)}</h2>${t.description ? `<p>${escape(t.description)}</p>` : ''}<span class="created">Added ${new Date(t.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span></div><select class="badge status-select ${t.status}" data-status="${t.id}" aria-label="Status for ${escape(t.title)}" ${pendingStatuses.has(t.id) ? 'disabled aria-busy="true"' : ''}>${Object.entries(statuses).map(([key, label]) => `<option value="${key}" ${(pendingStatuses.get(t.id) || t.status) === key ? 'selected' : ''}>${label}</option>`).join('')}</select><div class="task-actions"><button class="text-button" data-edit="${t.id}" ${pendingStatuses.has(t.id) ? 'disabled' : ''} aria-label="Edit ${escape(t.title)}">Edit</button><button class="text-button danger" data-delete="${t.id}" ${pendingStatuses.has(t.id) ? 'disabled' : ''} aria-label="Delete ${escape(t.title)}">Delete</button></div></article>`).join('');
+  list.querySelectorAll('[data-status]').forEach(select => {
+    select.onchange = () => updateStatus(select.dataset.status, select.value);
+  });
   list.querySelectorAll('[data-edit]').forEach(button => { button.onclick = () => taskDialog(tasks.find(t => t.id === button.dataset.edit)); });
   list.querySelectorAll('[data-delete]').forEach(button => { button.onclick = () => deleteDialog(tasks.find(t => t.id === button.dataset.delete)); });
+}
+
+async function updateStatus(taskId, status) {
+  const owner = session?.user.id;
+  const task = tasks.find(item => item.id === taskId);
+  if (!owner || !task || !(status in statuses) || task.status === status || pendingStatuses.has(taskId)) return;
+  pendingStatuses.set(taskId, status);
+  message('Saving status…');
+  renderTasks();
+  try {
+    const { error } = await supabase.from('tasks').update({ status })
+      .eq('id', taskId).eq('user_id', owner).select('id').single();
+    if (error) throw error;
+    pendingStatuses.delete(taskId);
+    if (session?.user.id !== owner) return;
+    message(`Status changed to ${statuses[status]}.`);
+    await loadTasks();
+  } catch (error) {
+    pendingStatuses.delete(taskId);
+    if (session?.user.id !== owner) return;
+    // The saved task stays unchanged until the database confirms the update.
+    renderTasks();
+    message(`Status was not saved. ${errorText(error)}`, true);
+  } finally {
+    if (session?.user.id === owner) {
+      const control = document.querySelector(`[data-status="${taskId}"]`);
+      if (control && !control.disabled) control.focus();
+    }
+  }
 }
 
 function taskDialog(task = null) {

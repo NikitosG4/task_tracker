@@ -4,7 +4,7 @@ A personal task tracker for an Engineering Design 1 project. Features: email reg
 
 ## Current status
 
-Stage 2: registration, login/logout, task CRUD, search, and status filters implemented. Live authenticated testing and deployment are pending.
+Stage 2: registration, login/logout, task CRUD, direct status dropdowns, search, and status filters implemented. The user has confirmed core authenticated flows. Direct dropdown testing, two-user isolation checks, and deployment are pending.
 
 - Deployed application: pending final deployment.
 - Unlisted YouTube demo (3–5 minutes): pending recording.
@@ -37,7 +37,7 @@ Import the public GitHub repository into Netlify. Set VITE_SUPABASE_URL and VITE
 
 ## Verification
 
-The production build, initial browser rendering, and anonymous read denial have been checked. Authenticated task operations and two-user isolation testing are pending. See [the verification checklist](docs/testing.md). Repeat core flows on the deployed application before submission.
+The production build, initial browser rendering, and anonymous read denial have been checked. The user has confirmed core authenticated task operations. Direct status dropdowns and two-user isolation still need testing. See [the verification checklist](docs/testing.md). Repeat core flows on the deployed application before submission.
 
 ## AI assistance
 

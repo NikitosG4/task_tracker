@@ -10,7 +10,17 @@
 - Supabase Auth settings respond successfully: email signup enabled; email confirmation required.
 - Anonymous task read returns HTTP 401 with PostgreSQL code 42501 (permission denied).
 
-## Authenticated checks still required
+## User-reported results
+
+The user confirmed registration, login, task creation, editing through the dialog, persistence after refresh, deletion, and logout/login work. These were user-run checks.
+
+## Follow-up checks
+
+- Change a task status directly from its dropdown. Confirm the counts and filters update and the value survives refresh.
+- Simulate loss of network while changing status; confirm an error appears and the prior saved status is restored.
+- Two-account privacy checks and deployed testing remain pending.
+
+## Full authenticated test checklist
 
 Use two accounts you control. Do not disable Row Level Security.
 
