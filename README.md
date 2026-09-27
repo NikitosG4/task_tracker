@@ -4,7 +4,7 @@ A personal task tracker for Engineering Design 1 projects. Break project work in
 
 - **Live application:** [task-tracker-mg.netlify.app](https://task-tracker-mg.netlify.app)
 - **Repository:** [NikitosG4/task_tracker](https://github.com/NikitosG4/task_tracker)
-- **Demo video (3–5 minutes, unlisted):** Pending recording and YouTube link.
+- **Demo video:** [Watch the Task Tracker demo on YouTube](https://youtu.be/fSkOcE06wcI)
 
 ## Features
 
