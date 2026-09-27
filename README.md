@@ -1,10 +1,10 @@
 # ED1 Task Tracker
 
-A personal task tracker for an Engineering Design 1 project. Planned features: email registration, login/logout, and creating, viewing, editing, and deleting private tasks with To do, In progress, and Done statuses.
+A personal task tracker for an Engineering Design 1 project. Features: email registration, login/logout, and creating, viewing, editing, and deleting private tasks with To do, In progress, and Done statuses.
 
 ## Current status
 
-Stage 1: local scaffold and database schema prepared. Authentication, task management, and live database verification are pending.
+Stage 2: registration, login/logout, task CRUD, search, and status filters implemented. Live authenticated testing and deployment are pending.
 
 - Deployed application: pending final deployment.
 - Unlisted YouTube demo (3–5 minutes): pending recording.
@@ -19,13 +19,15 @@ JavaScript, HTML, CSS, Vite, Supabase Auth and PostgreSQL, and Netlify hosting.
 2. Create a new Supabase project on the free plan.
 3. Run `supabase/schema.sql` once in its SQL Editor to create the tasks table and per-user access policies.
 4. Copy `.env.example` to `.env.local` and set the project URL and publishable key. Never put a secret or service-role key in the frontend.
-5. Run `npm run dev` and open the printed local URL.
-6. Run `npm run build` to create the deployable `dist` folder.
+5. In Supabase Authentication → URL Configuration, add `http://localhost:5173` and `http://127.0.0.1:5173` to allowed redirect URLs. During local development set Site URL to `http://localhost:5173`. Keep email confirmation enabled; confirm your email before logging in.
+6. Run `npm run dev` and open the printed local URL.
+7. Run `npm run build` to create the deployable `dist` folder.
 
 ## Structure
 
 - `src/main.js`: application entry point.
-- `src/style.css`: interface styles.
+- `src/style.css`: responsive interface styles.
+- `src/supabase.js`: Supabase connection using environment variables.
 - `supabase/schema.sql`: table, index, and per-user access policies.
 - `netlify.toml`: build settings.
 
@@ -33,9 +35,9 @@ JavaScript, HTML, CSS, Vite, Supabase Auth and PostgreSQL, and Netlify hosting.
 
 Import the public GitHub repository into Netlify. Set VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY in its environment settings before building. Build command: `npm run build`. Publish directory: `dist`. Set the deployed URL in Supabase Auth's Site URL and allowed redirect URLs. Add the deployed application and demo links to this README before submission.
 
-## Verification planned
+## Verification
 
-Test registration, email confirmation, login/logout, create/edit/delete, persistence after refresh, and isolation between two users. Repeat core flows on the deployed application.
+The production build, initial browser rendering, and anonymous read denial have been checked. Authenticated task operations and two-user isolation testing are pending. See [the verification checklist](docs/testing.md). Repeat core flows on the deployed application before submission.
 
 ## AI assistance
 
