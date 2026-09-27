@@ -123,7 +123,7 @@ function renderTasks() {
   const list = document.querySelector('#task-list');
   if (!list) return;
   const counts = Object.fromEntries(Object.keys(statuses).map(key => [key, tasks.filter(t => t.status === key).length]));
-  document.querySelector('#stats').innerHTML = Object.entries(statuses).map(([key, name], i) => `<article class="stat"><div><span class="stat-label"><i class="dot ${key}"></i>${name}</span><strong>${loading ? '—' : counts[key]}</strong></div><span class="stat-number">0${i + 1}</span></article>`).join('');
+  document.querySelector('#stats').innerHTML = Object.entries(statuses).map(([key, name]) => `<article class="stat"><div><span class="stat-label"><i class="dot ${key}"></i>${name}</span><strong>${loading ? '—' : counts[key]}</strong></div></article>`).join('');
   document.querySelector('#refresh').disabled = loading;
   if (loading) { list.innerHTML = '<div class="empty"><p>Loading your tasks…</p></div>'; return; }
   if (loadError) { list.innerHTML = `<div class="empty"><h2>Couldn’t load your tasks</h2><p>${escape(loadError)}</p><p>Use Refresh to try again.</p></div>`; return; }
