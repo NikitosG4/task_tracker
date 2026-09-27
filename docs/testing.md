@@ -12,13 +12,12 @@
 
 ## User-reported results
 
-The user confirmed registration, login, task creation, editing through the dialog, persistence after refresh, deletion, and logout/login work. These were user-run checks.
+The user confirmed registration, login, task creation, editing through the dialog, persistence after refresh, deletion, and logout/login work. The user also confirmed direct status changes and two-account task visibility isolation. These were user-run local checks.
 
 ## Follow-up checks
 
-- Change a task status directly from its dropdown. Confirm the counts and filters update and the value survives refresh.
 - Simulate loss of network while changing status; confirm an error appears and the prior saved status is restored.
-- Two-account privacy checks and deployed testing remain pending.
+- Direct cross-account API attempts and authenticated flows on the deployed site remain pending.
 
 ## Full authenticated test checklist
 
@@ -35,6 +34,6 @@ Use two accounts you control. Do not disable Row Level Security.
 9. Confirm a title consisting only of spaces is rejected. Enter HTML-like text and confirm it is displayed as text.
 10. Check the layout on a phone-sized browser and repeat essential steps on the deployed site.
 
-## Deployment remains pending
+## Deployment
 
-Set the deployed URL in Supabase's Site URL and redirect allowlist. Add both VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY to the hosting build environment, deploy, then test email confirmation on the deployed URL.
+The app is deployed at https://task-tracker-mg.netlify.app. Public access to the login page was verified in the browser; the user also confirmed incognito access. The user reported configuring Supabase redirect URLs. Email confirmation, authenticated task operations, and persistence should still be checked on the live URL before submission.
